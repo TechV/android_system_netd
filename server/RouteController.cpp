@@ -767,6 +767,7 @@ WARN_UNUSED_RESULT int modifyTetheredNetwork(uint16_t action, const char* inputI
                         inputInterface, OIF_NONE, INVALID_UID, INVALID_UID);
 }
 
+#ifndef DISABLE_ROUTE_FLUSH
 // Returns 0 on success or negative errno on failure.
 WARN_UNUSED_RESULT int flushRules() {
     for (size_t i = 0; i < ARRAY_SIZE(IP_VERSIONS); ++i) {
@@ -783,6 +784,7 @@ WARN_UNUSED_RESULT int flushRules() {
     }
     return 0;
 }
+#endif
 
 // Adds or removes an IPv4 or IPv6 route to the specified table and, if it's a directly-connected
 // route, to the main table as well.
@@ -877,9 +879,11 @@ WARN_UNUSED_RESULT int flushRoutes(const char* interface) {
 }  // namespace
 
 int RouteController::Init(unsigned localNetId) {
+#ifndef DISABLE_ROUTE_FLUSH
     if (int ret = flushRules()) {
         return ret;
     }
+#endif
     if (int ret = addLegacyRouteRules()) {
         return ret;
     }

@@ -83,6 +83,10 @@ ifdef WPA_SUPPLICANT_VERSION
   LOCAL_C_INCLUDES += external/wpa_supplicant_8/src/common
 endif
 
+ifeq ($(NETD_DISABLE_ROUTE_FLUSH), true)
+  LOCAL_CFLAGS += -DDISABLE_ROUTE_FLUSH
+endif
+
 include $(BUILD_EXECUTABLE)
 
 include $(CLEAR_VARS)
